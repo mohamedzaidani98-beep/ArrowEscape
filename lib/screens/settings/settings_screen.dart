@@ -26,15 +26,15 @@ class SettingsScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: themeColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'SETTINGS',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color: AppColors.textPrimary,
+            color: themeColors.textPrimary,
             letterSpacing: 2,
           ),
         ),
@@ -47,12 +47,12 @@ class SettingsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(24),
             children: [
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'THEME & CUSTOM SKIN',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.textSecondary,
+                  color: themeColors.textSecondary,
                   letterSpacing: 1.5,
                 ),
               ),
@@ -71,7 +71,8 @@ class SettingsScreen extends ConsumerWidget {
                         theme == GameTheme.classic ||
                         theme == GameTheme.neon ||
                         theme == GameTheme.retro ||
-                        theme == GameTheme.cyber;
+                        theme == GameTheme.cyber ||
+                        theme == GameTheme.paper;
                     final isLocked =
                         !isDefaultUnlocked && !progress.skinsUnlocked;
                     final previewColors = AppThemes.getThemeColors(theme);
@@ -93,15 +94,17 @@ class SettingsScreen extends ConsumerWidget {
                           border: Border.all(
                             color: isSelected
                                 ? previewColors.accentColor
-                                : AppColors.surfaceLight,
+                                : themeColors.surfaceLight,
                             width: isSelected ? 3 : 1.5,
                           ),
                         ),
                         child: Center(
                           child: isLocked
-                              ? const Icon(
+                              ? Icon(
                                   Icons.lock,
-                                  color: AppColors.textMuted,
+                                  color: previewColors.isLight
+                                      ? const Color(0xFF8C95A3)
+                                      : AppColors.textMuted,
                                   size: 20,
                                 )
                               : Container(
@@ -150,12 +153,12 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'PREFERENCES',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.textSecondary,
+                  color: themeColors.textSecondary,
                   letterSpacing: 1.5,
                 ),
               ),
@@ -167,6 +170,7 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (_) =>
                     ref.read(progressRepositoryProvider).toggleHaptics(),
                 accentColor: themeColors.accentColor,
+                themeColors: themeColors,
               ),
               const SizedBox(height: 14),
               _buildPreferenceTile(
@@ -176,6 +180,7 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (_) =>
                     ref.read(progressRepositoryProvider).toggleHeartRemover(),
                 accentColor: themeColors.accentColor,
+                themeColors: themeColors,
               ),
               const SizedBox(height: 14),
               _buildPreferenceTile(
@@ -185,16 +190,7 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (_) =>
                     ref.read(progressRepositoryProvider).toggleAssistMode(),
                 accentColor: themeColors.accentColor,
-              ),
-              const SizedBox(height: 14),
-              _buildPreferenceTile(
-                title: 'COMPLEX RANDOM PATHS',
-                description:
-                    'Generate harder random puzzles with less obvious paths',
-                value: progress.complexPaths,
-                onChanged: (_) =>
-                    ref.read(progressRepositoryProvider).toggleComplexPaths(),
-                accentColor: themeColors.accentColor,
+                themeColors: themeColors,
               ),
             ],
           ),
@@ -209,13 +205,14 @@ class SettingsScreen extends ConsumerWidget {
     required bool value,
     required ValueChanged<bool> onChanged,
     required Color accentColor,
+    required ThemeColors themeColors,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: themeColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.surfaceLight, width: 1.5),
+        border: Border.all(color: themeColors.surfaceLight, width: 1.5),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,20 +224,20 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+                    color: themeColors.textPrimary,
                     letterSpacing: 1.2,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
+                    color: themeColors.textSecondary,
                     height: 1.3,
                   ),
                 ),
@@ -253,8 +250,8 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: onChanged,
             activeThumbColor: accentColor,
             activeTrackColor: accentColor.withValues(alpha: 0.3),
-            inactiveThumbColor: AppColors.textMuted,
-            inactiveTrackColor: AppColors.surfaceLight,
+            inactiveThumbColor: themeColors.textMuted,
+            inactiveTrackColor: themeColors.surfaceLight,
           ),
         ],
       ),
@@ -301,20 +298,20 @@ class _UnlockDialogState extends State<_UnlockDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 'Unlock Theme & Skins',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
+                  color: themeColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Unlock all custom themes and premium styling options.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 14, color: themeColors.textSecondary),
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
@@ -343,12 +340,12 @@ class _UnlockDialogState extends State<_UnlockDialog> {
               const SizedBox(height: 20),
               TextField(
                 controller: _controller,
-                style: const TextStyle(color: AppColors.textPrimary),
+                style: TextStyle(color: themeColors.textPrimary),
                 decoration: InputDecoration(
                   hintText: 'Enter unlock code',
-                  hintStyle: const TextStyle(color: AppColors.textMuted),
+                  hintStyle: TextStyle(color: themeColors.textMuted),
                   filled: true,
-                  fillColor: AppColors.surfaceLight,
+                  fillColor: themeColors.surfaceLight,
                   errorText: _errorMessage,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -369,9 +366,9 @@ class _UnlockDialogState extends State<_UnlockDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text(
+                    child: Text(
                       'Cancel',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      style: TextStyle(color: themeColors.textSecondary),
                     ),
                   ),
                   const SizedBox(width: 12),

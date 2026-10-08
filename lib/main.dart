@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'core/app_colors.dart';
+import 'core/app_themes.dart';
 import 'core/audio_haptic_helper.dart';
 import 'data/repositories/progress_repository.dart';
 import 'data/repositories/level_repository.dart';
@@ -38,14 +38,17 @@ void main() async {
   );
 }
 
-class ArrowPuzzleApp extends StatelessWidget {
+class ArrowPuzzleApp extends ConsumerWidget {
   const ArrowPuzzleApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progressRepo = ref.watch(progressRepositoryProvider);
+    final themeColors = AppThemes.getThemeColors(progressRepo.selectedTheme);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: themeColors.isLight ? Brightness.dark : Brightness.light,
     ));
 
     return MaterialApp(
@@ -53,8 +56,8 @@ class ArrowPuzzleApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: AppColors.background,
+        brightness: themeColors.isLight ? Brightness.light : Brightness.dark,
+        scaffoldBackgroundColor: themeColors.background,
         fontFamily: 'BebasNeue',
       ),
       home: const HomeScreen(),

@@ -282,11 +282,13 @@ class GridComponent extends PositionComponent with TapCallbacks {
       Canvas canvas, Offset center, OrphanDotType type, double cs, ThemeColors themeColors) {
     if (type == OrphanDotType.neutral) return;
 
-    _orphanFillPaint.color = const Color(0xFF2A2A2A);
+    _orphanFillPaint.color =
+        themeColors.isLight ? const Color(0xFFE2E8F0) : const Color(0xFF2A2A2A);
     canvas.drawCircle(center, cs * 0.38, _orphanFillPaint);
 
     _orphanStrokePaint
-      ..color = themeColors.arrowColor.withValues(alpha: 0.4)
+      ..color = themeColors.arrowColor
+          .withValues(alpha: themeColors.isLight ? 0.25 : 0.4)
       ..strokeWidth = cs * 0.04;
     canvas.drawCircle(center, cs * 0.38, _orphanStrokePaint);
 

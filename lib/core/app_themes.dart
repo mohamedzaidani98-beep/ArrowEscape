@@ -12,6 +12,9 @@ enum GameTheme {
   pastel,
   sunset,
   rainbow,
+  paper,
+  rainbowLight,
+  blueprintLight,
 }
 
 class ThemeColors {
@@ -34,6 +37,13 @@ class ThemeColors {
     this.hasGlow = false,
     this.arrowPalette,
   });
+
+  bool get isLight => background.computeLuminance() > 0.5;
+
+  Color get textPrimary => isLight ? const Color(0xFF1E232A) : Colors.white;
+  Color get textSecondary => isLight ? const Color(0xFF5F6876) : const Color(0xFF9E9E9E);
+  Color get textMuted => isLight ? const Color(0xFF8C95A3) : const Color(0xFF6E727A);
+  Color get surfaceLight => isLight ? const Color(0xFFE2E6EC) : const Color(0xFF2E3137);
 }
 
 class AppThemes {
@@ -201,6 +211,57 @@ class AppThemes {
             Color(0xFF7C4DFF), // Purple
             Color(0xFFFF4081), // Pink
           ],
+        );
+      case GameTheme.paper:
+        return const ThemeColors(
+          background: Color(0xFFF6F7F9),
+          surface: Color(0xFFFFFFFF),
+          arrowColor: Color(0xFF1E232A),
+          accentColor: Color(0xFF2563EB),
+          accentDark: Color(0xFF1D4ED8),
+          bgGradient: LinearGradient(
+            colors: [Color(0xFFFFFFFF), Color(0xFFE8ECF2)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          hasGlow: false,
+        );
+      case GameTheme.rainbowLight:
+        return const ThemeColors(
+          background: Color(0xFFF7F8FA),
+          surface: Color(0xFFFFFFFF),
+          arrowColor: Color(0xFFD32F2F),
+          accentColor: Color(0xFF0288D1),
+          accentDark: Color(0xFF01579B),
+          bgGradient: LinearGradient(
+            colors: [Color(0xFFFFFFFF), Color(0xFFE8ECF2)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          hasGlow: false,
+          arrowPalette: [
+            Color(0xFFD32F2F),
+            Color(0xFFE65100),
+            Color(0xFFF57F17),
+            Color(0xFF2E7D32),
+            Color(0xFF0288D1),
+            Color(0xFF6A1B9A),
+            Color(0xFFC2185B),
+          ],
+        );
+      case GameTheme.blueprintLight:
+        return const ThemeColors(
+          background: Color(0xFFF0F7FF),
+          surface: Color(0xFFFFFFFF),
+          arrowColor: Color(0xFF0F3663),
+          accentColor: Color(0xFF0284C7),
+          accentDark: Color(0xFF0369A1),
+          bgGradient: LinearGradient(
+            colors: [Color(0xFFFFFFFF), Color(0xFFE0EFFE)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          hasGlow: false,
         );
     }
   }

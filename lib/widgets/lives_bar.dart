@@ -4,8 +4,14 @@ import '../core/app_colors.dart';
 class LivesBar extends StatefulWidget {
   final int lives;
   final int maxLives;
+  final bool isLight;
 
-  const LivesBar({super.key, required this.lives, required this.maxLives});
+  const LivesBar({
+    super.key,
+    required this.lives,
+    required this.maxLives,
+    this.isLight = false,
+  });
 
   @override
   State<LivesBar> createState() => _LivesBarState();
@@ -70,7 +76,7 @@ class _LivesBarState extends State<LivesBar> with SingleTickerProviderStateMixin
             isFull
                 ? ShaderMask(
                     shaderCallback: (bounds) => LinearGradient(
-                      colors: isLowLives
+                      colors: isLowLives || widget.isLight
                           ? [const Color(0xFFFF5252), const Color(0xFFFF1744)]
                           : [Colors.white, const Color(0xFFB0B0B0)],
                       begin: Alignment.topCenter,
@@ -82,9 +88,11 @@ class _LivesBarState extends State<LivesBar> with SingleTickerProviderStateMixin
                       size: 25,
                     ),
                   )
-                : const Icon(
+                : Icon(
                     Icons.favorite_border,
-                    color: AppColors.surfaceLight,
+                    color: widget.isLight
+                        ? const Color(0xFFCBD5E1)
+                        : AppColors.surfaceLight,
                     size: 24,
                   ),
             if (isFull)

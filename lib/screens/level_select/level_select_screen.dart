@@ -36,19 +36,19 @@ class LevelSelectScreen extends ConsumerWidget {
                       alignment: Alignment.centerLeft,
                       child: GestureDetector(
                         onTap: () => Navigator.pop(context),
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Icon(Icons.arrow_back_ios_new_rounded,
-                              color: AppColors.textPrimary, size: 20),
+                              color: themeColors.textPrimary, size: 20),
                         ),
                       ),
                     ),
-                    const Center(
+                    Center(
                       child: Text('Levels',
                           style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.textPrimary)),
+                              color: themeColors.textPrimary)),
                     ),
                   ],
                 ),
@@ -142,12 +142,12 @@ class _LevelCell extends StatelessWidget {
       bgColor = themeColors.surface;
       borderColor = themeColors.accentColor.withValues(alpha: 0.25);
       shadowColor = themeColors.surface.withValues(alpha: 0.8);
-      textColor = AppColors.textPrimary;
+      textColor = themeColors.textPrimary;
     } else {
       bgColor = themeColors.surface.withValues(alpha: 0.4);
       borderColor = Colors.transparent;
       shadowColor = Colors.transparent;
-      textColor = AppColors.textMuted;
+      textColor = themeColors.textMuted;
     }
 
     return GestureDetector(

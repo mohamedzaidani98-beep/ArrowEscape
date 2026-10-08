@@ -451,7 +451,8 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
             }
           }
           if (dotDist != null && animHead > dotDist) {
-            _drawOrphanDot(canvas, dotPx, dot.type, cellSize);
+            final themeColors = AppThemes.getThemeColors(gameState.theme);
+            _drawOrphanDot(canvas, dotPx, dot.type, cellSize, themeColors);
           }
         }
       }
@@ -616,13 +617,16 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
       rawPath.lineTo(preview[i].dx, preview[i].dy);
     }
 
+    final themeColors = AppThemes.getThemeColors(gameState.theme);
     final Color shadowColor = isBlocked
-        ? const Color(0xFF808080)
-        : Colors.white;
+        ? (themeColors.isLight ? const Color(0xFFCBD5E1) : const Color(0xFF808080))
+        : (themeColors.isLight
+            ? themeColors.accentColor.withValues(alpha: 0.3)
+            : Colors.white);
 
     final Color coreColor = isBlocked
-        ? const Color(0xFF606060)
-        : Colors.white;
+        ? (themeColors.isLight ? const Color(0xFF94A3B8) : const Color(0xFF606060))
+        : (themeColors.isLight ? themeColors.accentColor : Colors.white);
 
     final double pulse = 0.85 + 0.15 * (1.0 + (0.5 * _previewPulseTime).abs());
 
@@ -648,10 +652,12 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
   }
 
   Color _color() {
-    if (arrowModel.state == ArrowState.blocked || _isBlockedAnimating) {
-      return const Color(0xFF606060);
-    }
     final themeColors = AppThemes.getThemeColors(gameState.theme);
+    if (arrowModel.state == ArrowState.blocked || _isBlockedAnimating) {
+      return themeColors.isLight
+          ? const Color(0xFF94A3B8)
+          : const Color(0xFF606060);
+    }
     final palette = themeColors.arrowPalette;
     if (palette != null && palette.isNotEmpty) {
       final idx = arrowModel.id.hashCode.abs() % palette.length;
@@ -688,15 +694,17 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
     return track.last;
   }
 
-  static void _drawOrphanDot(
-      Canvas canvas, Offset center, OrphanDotType type, double cs) {
+  static void _drawOrphanDot(Canvas canvas, Offset center, OrphanDotType type,
+      double cs, ThemeColors themeColors) {
     if (type == OrphanDotType.neutral) return;
 
     canvas.drawCircle(
       center,
       cs * 0.38,
       Paint()
-        ..color = const Color(0xFF2A2A2A)
+        ..color = themeColors.isLight
+            ? const Color(0xFFE2E8F0)
+            : const Color(0xFF2A2A2A)
         ..style = PaintingStyle.fill,
     );
 
@@ -704,7 +712,8 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
       center,
       cs * 0.38,
       Paint()
-        ..color = const Color(0xFF666666)
+        ..color = themeColors.arrowColor
+            .withValues(alpha: themeColors.isLight ? 0.25 : 0.4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = cs * 0.04,
     );
@@ -723,7 +732,7 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
     canvas.rotate(dir.rotationRadians);
 
     final linePaint = Paint()
-      ..color = Colors.white
+      ..color = themeColors.isLight ? themeColors.arrowColor : Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = cs * 0.06
       ..strokeCap = StrokeCap.round;
@@ -740,7 +749,7 @@ class ArrowComponent extends PositionComponent with TapCallbacks {
     canvas.drawPath(
       arrowheadPath,
       Paint()
-        ..color = Colors.white
+        ..color = themeColors.isLight ? themeColors.arrowColor : Colors.white
         ..style = PaintingStyle.fill,
     );
 

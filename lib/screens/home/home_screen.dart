@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../core/app_colors.dart';
 import '../../core/app_themes.dart';
 import '../../core/constants.dart';
 import '../../core/audio_haptic_helper.dart';
@@ -98,20 +97,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'Random Puzzle',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
+                    color: themeColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   'Pick a difficulty tier',
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.textSecondary,
+                    color: themeColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -147,10 +146,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const SizedBox(height: 12),
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text(
+                  child: Text(
                     'Cancel',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
+                      color: themeColors.textSecondary,
                       fontSize: 14,
                     ),
                   ),
@@ -197,17 +196,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLight,
+                  color: themeColors.surfaceLight,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'MODES',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
+                  color: themeColors.textPrimary,
                   letterSpacing: 1.5,
                 ),
               ),
@@ -280,9 +279,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     margin: const EdgeInsets.only(bottom: 12),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceLight,
+                      color: themeColors.surface,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white10, width: 1.5),
+                      border: Border.all(
+                        color: themeColors.isLight
+                            ? themeColors.surfaceLight
+                            : Colors.white10,
+                        width: 1.5,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -297,32 +301,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const SizedBox(width: 16),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 item.label,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w900,
-                                  color: AppColors.textPrimary,
+                                  color: themeColors.textPrimary,
                                   letterSpacing: 1.2,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 item.description,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.textSecondary,
+                                  color: themeColors.textSecondary,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.arrow_forward_ios,
                           size: 14,
-                          color: AppColors.textMuted,
+                          color: themeColors.textMuted,
                         ),
                       ],
                     ),
@@ -395,10 +399,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(width: 6),
                       Text(
                         'LEVEL ${progress.currentLevel}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w900,
-                          color: AppColors.textPrimary,
+                          color: themeColors.textPrimary,
                           letterSpacing: 1.2,
                         ),
                       ),
@@ -430,7 +434,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               const Spacer(flex: 2),
 
-              Icon(Icons.arrow_upward, size: 48, color: AppColors.textPrimary)
+              Icon(Icons.arrow_upward, size: 48, color: themeColors.textPrimary)
                   .animate(
                     onPlay: (controller) => controller.repeat(reverse: true),
                   )
@@ -449,10 +453,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     fit: BoxFit.scaleDown,
                     child: Text(
                       AppConstants.appName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
+                        color: themeColors.textPrimary,
                         letterSpacing: 2,
                       ),
                     ),
@@ -467,12 +471,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               const SizedBox(height: 12),
 
-              const Text(
+              Text(
                     'Slide. Solve. Escape.',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textMuted,
+                      color: themeColors.textMuted,
                       letterSpacing: 2,
                     ),
                   )
@@ -512,8 +516,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     ),
                                   ),
                                 );
-                                if (mounted)
+                                if (mounted) {
                                   setState(() => _isNavigating = false);
+                                }
                               },
                         showBorder: false,
                       ),
@@ -613,7 +618,7 @@ class _MenuButton extends ConsumerWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: themeColors.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: themeColors.accentColor, width: 1.5),
           boxShadow: [
@@ -627,10 +632,10 @@ class _MenuButton extends ConsumerWidget {
         child: Center(
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w900,
-              color: AppColors.textPrimary,
+              color: themeColors.textPrimary,
               letterSpacing: 1.5,
             ),
           ),
@@ -665,7 +670,7 @@ class _DifficultyButton extends ConsumerWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: themeColors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: themeColors.accentColor, width: 1.5),
           boxShadow: [
@@ -683,10 +688,10 @@ class _DifficultyButton extends ConsumerWidget {
             const SizedBox(width: 10),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: themeColors.textPrimary,
                 letterSpacing: 1.2,
               ),
             ),

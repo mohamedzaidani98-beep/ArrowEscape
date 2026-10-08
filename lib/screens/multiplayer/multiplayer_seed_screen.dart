@@ -83,15 +83,15 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: themeColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'MULTIPLAYER',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w900,
-            color: AppColors.textPrimary,
+            color: themeColors.textPrimary,
             letterSpacing: 2,
           ),
         ),
@@ -107,7 +107,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: themeColors.surface,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: themeColors.accentColor.withValues(alpha: 0.4),
@@ -125,23 +125,23 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                           size: 24,
                         ),
                         const SizedBox(width: 10),
-                        const Text(
+                        Text(
                           'HOST ROOM',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
+                            color: themeColors.textPrimary,
                             letterSpacing: 1.5,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    const Text(
+                    Text(
                       'Share this room code with a friend to compete on the exact same puzzle layout!',
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: themeColors.textSecondary,
                         height: 1.3,
                       ),
                     ),
@@ -152,7 +152,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                         vertical: 14,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceLight,
+                        color: themeColors.surfaceLight,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Row(
@@ -170,9 +170,9 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                           Row(
                             children: [
                               IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.refresh,
-                                  color: AppColors.textSecondary,
+                                  color: themeColors.textSecondary,
                                 ),
                                 tooltip: 'New Code',
                                 onPressed: () {
@@ -181,9 +181,9 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.copy,
-                                  color: AppColors.textPrimary,
+                                  color: themeColors.textPrimary,
                                 ),
                                 tooltip: 'Copy Code',
                                 onPressed: _copyRoomCode,
@@ -221,10 +221,10 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: themeColors.surface,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: AppColors.surfaceLight,
+                    color: themeColors.surfaceLight,
                     width: 1.5,
                   ),
                 ),
@@ -239,42 +239,42 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                           size: 24,
                         ),
                         const SizedBox(width: 10),
-                        const Text(
+                        Text(
                           'JOIN ROOM',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
+                            color: themeColors.textPrimary,
                             letterSpacing: 1.5,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    const Text(
+                    Text(
                       'Enter or paste a room code to join the match.',
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: themeColors.textSecondary,
                         height: 1.3,
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _inputController,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: themeColors.textPrimary,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
                       decoration: InputDecoration(
                         hintText: 'e.g. ROOM-849201',
-                        hintStyle: const TextStyle(
-                          color: AppColors.textMuted,
+                        hintStyle: TextStyle(
+                          color: themeColors.textMuted,
                           letterSpacing: 1.0,
                         ),
                         filled: true,
-                        fillColor: AppColors.surfaceLight,
+                        fillColor: themeColors.surfaceLight,
                         errorText: _inputError,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -288,9 +288,9 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                           ),
                         ),
                         suffixIcon: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.paste,
-                            color: AppColors.textSecondary,
+                            color: themeColors.textSecondary,
                           ),
                           onPressed: () async {
                             final data = await Clipboard.getData('text/plain');
@@ -304,8 +304,8 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.surfaceLight,
-                        foregroundColor: AppColors.textPrimary,
+                        backgroundColor: themeColors.surfaceLight,
+                        foregroundColor: themeColors.textPrimary,
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),

@@ -19,7 +19,6 @@ class ProgressRepository extends ChangeNotifier {
   bool _hapticsEnabled = true;
   bool _heartRemover = false;
   bool _assistMode = false;
-  bool _complexPaths = false;
 
   final Map<int, LevelResult> _levelResults = {};
 
@@ -34,7 +33,6 @@ class ProgressRepository extends ChangeNotifier {
   bool get hapticsEnabled => _hapticsEnabled;
   bool get heartRemover => _heartRemover;
   bool get assistMode => _assistMode;
-  bool get complexPaths => _complexPaths;
 
   int getStarsForLevel(int level) => _levelResults[level]?.stars ?? 0;
 
@@ -68,7 +66,6 @@ class ProgressRepository extends ChangeNotifier {
     _hapticsEnabled = _box.get('hapticsEnabled', defaultValue: true);
     _heartRemover = _box.get('heartRemover', defaultValue: false);
     _assistMode = _box.get('assistMode', defaultValue: false);
-    _complexPaths = _box.get('complexPaths', defaultValue: false);
     AudioHapticHelper.hapticsEnabled = _hapticsEnabled;
 
     for (final key in _resultsBox.keys) {
@@ -96,7 +93,6 @@ class ProgressRepository extends ChangeNotifier {
       'hapticsEnabled': _hapticsEnabled,
       'heartRemover': _heartRemover,
       'assistMode': _assistMode,
-      'complexPaths': _complexPaths,
     });
 
     for (final entry in _levelResults.entries) {
@@ -125,12 +121,6 @@ class ProgressRepository extends ChangeNotifier {
 
   Future<void> toggleAssistMode() async {
     _assistMode = !_assistMode;
-    await _save();
-    notifyListeners();
-  }
-
-  Future<void> toggleComplexPaths() async {
-    _complexPaths = !_complexPaths;
     await _save();
     notifyListeners();
   }

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/app_colors.dart';
 import '../../core/app_themes.dart';
 import '../../core/constants.dart';
 import '../../core/audio_haptic_helper.dart';
@@ -76,9 +75,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   Future<void> _loadLevelAsync(int levelNum) async {
     final levelRepo = ref.read(levelRepositoryProvider);
-    final progress = ref.read(progressRepositoryProvider);
 
-    final useCache = !widget.isRandom || !progress.complexPaths;
+    final useCache = !widget.isRandom;
     if (useCache && levelRepo.isCached(levelNum)) {
       _level = levelRepo.getLevel(levelNum);
       _initGame();
@@ -93,8 +91,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
     try {
       final level = widget.isRandom
-          ? await levelRepo.getRandomLevelAsync(levelNum,
-              complexPaths: progress.complexPaths)
+          ? await levelRepo.getRandomLevelAsync(levelNum)
           : await levelRepo.getLevelAsync(levelNum, preGenerateNext: true);
       if (!mounted) return;
       _level = level;
@@ -318,29 +315,29 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 size: 48,
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Leave Level?',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
+                  color: themeColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Your current level progress will be lost.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
+                  color: themeColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 20),
               _DialogButton(
                 label: 'Resume',
                 icon: Icons.play_arrow_rounded,
-                textColor: AppColors.textPrimary,
+                textColor: themeColors.textPrimary,
                 iconColor: themeColors.accentColor,
                 onTap: () => Navigator.pop(ctx, false),
               ),
@@ -348,7 +345,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               _DialogButton(
                 label: 'Leave',
                 icon: Icons.close_rounded,
-                textColor: AppColors.textSecondary,
+                textColor: themeColors.textSecondary,
                 iconColor: themeColors.accentColor,
                 onTap: () => Navigator.pop(ctx, true),
               ),
@@ -622,6 +619,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                   onBack: _handleBack,
                   gameMode: widget.gameMode,
                   score: _timeAttackScore,
+                  themeColors: themeColors,
                 ),
               if (_totalTime > 0 || widget.gameMode == GameMode.timeAttack)
                 RepaintBoundary(
@@ -638,6 +636,10 @@ class _GameScreenState extends ConsumerState<GameScreen>
                   builder: (context, constraints) {
                     final boardSize =
                         min(constraints.maxWidth, constraints.maxHeight - 16);
+                    final comboCount = _gameState?.comboCount ?? 2;
+                    final comboColor = themeColors.arrowPalette != null
+                        ? themeColors.arrowPalette![(comboCount - 2).clamp(0, 1000) % themeColors.arrowPalette!.length]
+                        : (themeColors.isLight ? themeColors.accentDark : themeColors.accentColor);
                     return Transform.translate(
                       offset: Offset(_shakeOffset, 0),
                       child: Stack(
@@ -664,22 +666,31 @@ class _GameScreenState extends ConsumerState<GameScreen>
                               child: RepaintBoundary(
                                 child: Text(
                                   _comboText!,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 26,
                                     fontWeight: FontWeight.w900,
-                                    color: AppColors.primary,
+                                    color: comboColor,
                                     letterSpacing: 1.5,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black87,
-                                        blurRadius: 12,
-                                        offset: Offset(0, 2),
-                                      ),
-                                      Shadow(
-                                        color: AppColors.primary,
-                                        blurRadius: 16,
-                                      ),
-                                    ],
+                                    shadows: themeColors.isLight
+                                        ? [
+                                            Shadow(
+                                              color: comboColor.withValues(alpha: 0.35),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ]
+                                        : [
+                                            const Shadow(
+                                              color: Colors.black87,
+                                              blurRadius: 12,
+                                              offset: Offset(0, 2),
+                                            ),
+                                            if (themeColors.hasGlow)
+                                              Shadow(
+                                                color: comboColor,
+                                                blurRadius: 16,
+                                              ),
+                                          ],
                                   ),
                                 )
                                     .animate()
@@ -734,6 +745,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 progress: progressVal,
                 gameMode: widget.gameMode,
                 heartRemover: progressState.heartRemover,
+                themeColors: themeColors,
               ),
             ],
           ),
@@ -773,10 +785,10 @@ class _TimerDisplay extends ConsumerWidget {
       width: 140,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.surface.withValues(alpha: 0.8),
+        color: themeColors.surface.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isLowTime ? const Color(0xFF808080) : AppColors.surfaceLight,
+          color: isLowTime ? const Color(0xFF808080) : themeColors.surfaceLight,
           width: 1.5,
         ),
         boxShadow: [
@@ -817,7 +829,7 @@ class _TimerDisplay extends ConsumerWidget {
               height: 3,
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: AppColors.surfaceLight.withValues(alpha: 0.3),
+                backgroundColor: themeColors.surfaceLight.withValues(alpha: 0.3),
                 valueColor: AlwaysStoppedAnimation<Color>(color),
               ),
             ),
@@ -848,6 +860,7 @@ class _TopBar extends StatelessWidget {
   final VoidCallback onBack;
   final GameMode gameMode;
   final int score;
+  final ThemeColors themeColors;
 
   const _TopBar({
     required this.level,
@@ -855,6 +868,7 @@ class _TopBar extends StatelessWidget {
     required this.onBack,
     required this.gameMode,
     this.score = 0,
+    required this.themeColors,
   });
 
   @override
@@ -879,10 +893,10 @@ class _TopBar extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: GestureDetector(
               onTap: onBack,
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Icon(Icons.arrow_back,
-                    color: AppColors.textPrimary, size: 22),
+                    color: themeColors.textPrimary, size: 22),
               ),
             ),
           ),
@@ -892,10 +906,10 @@ class _TopBar extends StatelessWidget {
               children: [
                 Text(
                   titleText,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
+                    color: themeColors.textPrimary,
                   ),
                 ),
               ],
@@ -912,12 +926,14 @@ class _BottomBar extends StatelessWidget {
   final double progress;
   final GameMode gameMode;
   final bool heartRemover;
+  final ThemeColors themeColors;
 
   const _BottomBar({
     required this.lives,
     required this.progress,
     required this.gameMode,
     this.heartRemover = false,
+    required this.themeColors,
   });
 
   @override
@@ -934,9 +950,9 @@ class _BottomBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(5),
               child: LinearProgressIndicator(
                 value: progress,
-                backgroundColor: AppColors.surfaceLight,
+                backgroundColor: themeColors.surfaceLight,
                 valueColor:
-                    const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    AlwaysStoppedAnimation<Color>(themeColors.accentColor),
               ),
             ),
           ),
@@ -959,18 +975,22 @@ class _BottomBar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                const Text(
+                Text(
                   '∞',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
+                    color: themeColors.textPrimary,
                   ),
                 ),
               ],
             )
           else
-            LivesBar(lives: lives, maxLives: AppConstants.maxLives),
+            LivesBar(
+              lives: lives,
+              maxLives: AppConstants.maxLives,
+              isLight: themeColors.isLight,
+            ),
         ],
       ),
     );
@@ -1016,11 +1036,11 @@ class _LevelCompleteDialog extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Level Complete!',
+            Text('Level Complete!',
                 style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary)),
+                    color: themeColors.textPrimary)),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1064,22 +1084,22 @@ class _LevelCompleteDialog extends ConsumerWidget {
                         duration: 1.seconds,
                         curve: Curves.easeInOut),
                     const SizedBox(height: 10),
-                    const Text(
+                    Text(
                       'You Finished the Game!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
+                        color: themeColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
+                    Text(
                       'Congratulations! You\'ve solved all 500 challenges. Stay tuned for more levels coming soon!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: themeColors.textSecondary,
                         height: 1.3,
                       ),
                     ),
@@ -1098,7 +1118,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
             _DialogButton(
               label: 'Home',
               icon: Icons.home_rounded,
-              textColor: AppColors.textPrimary,
+              textColor: themeColors.textPrimary,
               iconColor: themeColors.accentColor,
               onTap: onMenu,
             ),
@@ -1106,7 +1126,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
             _DialogButton(
               label: 'Buy me a coffee',
               icon: Icons.coffee_rounded,
-              textColor: AppColors.textPrimary,
+              textColor: themeColors.textPrimary,
               iconColor: themeColors.accentColor,
               onTap: () async {
                 final uri = Uri.parse('https://ko-fi.com/sidhant947');
@@ -1181,10 +1201,10 @@ class _GameOverDialog extends ConsumerWidget {
               isTimeAttack
                   ? "Time's Up!"
                   : (isTimeout ? 'Out of Time!' : 'Out of Lives!'),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w900,
-                color: AppColors.textPrimary,
+                color: themeColors.textPrimary,
               ),
             ),
             if (isTimeAttack) ...[
@@ -1192,10 +1212,10 @@ class _GameOverDialog extends ConsumerWidget {
               Text(
                 'Puzzles Cleared: $score\nFinal Level: ${level.levelNumber}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
+                  color: themeColors.textSecondary,
                 ),
               ),
             ],
@@ -1203,7 +1223,7 @@ class _GameOverDialog extends ConsumerWidget {
             _DialogButton(
               label: isTimeAttack ? 'Start New Run' : 'Restart Level',
               icon: Icons.refresh_rounded,
-              textColor: AppColors.textPrimary,
+              textColor: themeColors.textPrimary,
               iconColor: themeColors.accentColor,
               onTap: onRestart,
             ),
@@ -1211,7 +1231,7 @@ class _GameOverDialog extends ConsumerWidget {
             _DialogButton(
               label: 'Home',
               icon: Icons.home_rounded,
-              textColor: AppColors.textSecondary,
+              textColor: themeColors.textSecondary,
               iconColor: themeColors.accentColor,
               onTap: onMenu,
             ),
@@ -1226,14 +1246,14 @@ class _DialogButton extends ConsumerWidget {
   final String label;
   final IconData icon;
   final VoidCallback onTap;
-  final Color textColor;
+  final Color? textColor;
   final Color iconColor;
 
   const _DialogButton({
     required this.label,
     required this.icon,
     required this.onTap,
-    this.textColor = Colors.white,
+    this.textColor,
     this.iconColor = Colors.white,
   });
 
@@ -1278,7 +1298,7 @@ class _DialogButton extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
-                  color: textColor,
+                  color: textColor ?? themeColors.textPrimary,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -1398,7 +1418,7 @@ class _LevelLoadingScreen extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 2.0,
-                  color: AppColors.textSecondary.withValues(alpha: 0.8),
+                  color: themeColors.textSecondary.withValues(alpha: 0.8),
                 ),
               ),
             ],

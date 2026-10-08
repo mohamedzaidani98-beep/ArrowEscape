@@ -18,15 +18,15 @@ class HowToPlayScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: themeColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'HOW TO PLAY',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            color: AppColors.textPrimary,
+            color: themeColors.textPrimary,
             letterSpacing: 2,
           ),
         ),
@@ -38,7 +38,7 @@ class HowToPlayScreen extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             children: [
-              _buildSectionHeader('THE BASICS'),
+              _buildSectionHeader('THE BASICS', themeColors),
               const SizedBox(height: 12),
               _buildGuideCard(
                 themeColors: themeColors,
@@ -76,7 +76,7 @@ class HowToPlayScreen extends ConsumerWidget {
                     'In Classic mode, you start with 3 hearts. Tapping a blocked arrow costs 1 heart. If you deplete all 3 hearts, you must restart the level. You can toggle Infinite Lives in Settings anytime.',
               ),
               const SizedBox(height: 24),
-              _buildSectionHeader('BOARD ELEMENTS'),
+              _buildSectionHeader('BOARD ELEMENTS', themeColors),
               const SizedBox(height: 12),
               _buildGuideCard(
                 themeColors: themeColors,
@@ -96,7 +96,7 @@ class HowToPlayScreen extends ConsumerWidget {
                     'Release arrows in quick succession (within 1.5 seconds) to trigger combos. Chaining consecutive escapes builds momentum and scores combo multipliers.',
               ),
               const SizedBox(height: 24),
-              _buildSectionHeader('GAME MODES'),
+              _buildSectionHeader('GAME MODES', themeColors),
               const SizedBox(height: 12),
               _buildGuideCard(
                 themeColors: themeColors,
@@ -143,7 +143,7 @@ class HowToPlayScreen extends ConsumerWidget {
                     'Generate infinite on-demand puzzles across Easy, Medium, Hard, Master, and Expert difficulties without affecting your campaign level progress.',
               ),
               const SizedBox(height: 24),
-              _buildSectionHeader('PRO STRATEGIES'),
+              _buildSectionHeader('PRO STRATEGIES', themeColors),
               const SizedBox(height: 12),
               _buildGuideCard(
                 themeColors: themeColors,
@@ -179,13 +179,13 @@ class HowToPlayScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(String title, ThemeColors themeColors) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w800,
-        color: AppColors.textSecondary,
+        color: themeColors.textSecondary,
         letterSpacing: 1.5,
       ),
     );
@@ -201,7 +201,7 @@ class HowToPlayScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: themeColors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: themeColors.accentColor.withValues(alpha: 0.35),
@@ -233,19 +233,19 @@ class HowToPlayScreen extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
+                    color: themeColors.textPrimary,
                     letterSpacing: 0.8,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.textSecondary,
+                    color: themeColors.textSecondary,
                     height: 1.4,
                   ),
                 ),
