@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_themes.dart';
 import '../../core/audio_haptic_helper.dart';
+import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 import '../game/game_screen.dart';
 
@@ -62,10 +63,11 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
 
   void _copyRoomCode() {
     AudioHapticHelper.playClick();
+    final l10n = AppLocalizations.of(context)!;
     Clipboard.setData(ClipboardData(text: _roomCode));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Room code $_roomCode copied to clipboard!'),
+        content: Text(l10n.roomCodeCopied(_roomCode)),
         backgroundColor: AppColors.surfaceLight,
         duration: const Duration(seconds: 2),
       ),
@@ -76,6 +78,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
   Widget build(BuildContext context) {
     final progress = ref.watch(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -87,7 +90,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'MULTIPLAYER',
+          l10n.multiplayerTitle,
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w900,
@@ -126,7 +129,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          'HOST ROOM',
+                          l10n.hostRoomTitle,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -138,7 +141,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Share this room code with a friend to compete on the exact same puzzle layout!',
+                      l10n.hostRoomDesc,
                       style: TextStyle(
                         fontSize: 13,
                         color: themeColors.textSecondary,
@@ -174,7 +177,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                                   Icons.refresh,
                                   color: themeColors.textSecondary,
                                 ),
-                                tooltip: 'New Code',
+                                tooltip: l10n.tooltipNewCode,
                                 onPressed: () {
                                   AudioHapticHelper.playClick();
                                   _generateNewRoomCode();
@@ -185,7 +188,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                                   Icons.copy,
                                   color: themeColors.textPrimary,
                                 ),
-                                tooltip: 'Copy Code',
+                                tooltip: l10n.tooltipCopyCode,
                                 onPressed: _copyRoomCode,
                               ),
                             ],
@@ -205,9 +208,9 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                       ),
                       onPressed: () => _playRoom(_roomCode),
                       icon: const Icon(Icons.play_arrow_rounded, size: 24),
-                      label: const Text(
-                        'START MATCH',
-                        style: TextStyle(
+                      label: Text(
+                        l10n.startMatch,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.2,
@@ -240,7 +243,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          'JOIN ROOM',
+                          l10n.joinRoomTitle,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -252,7 +255,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Enter or paste a room code to join the match.',
+                      l10n.joinRoomDesc,
                       style: TextStyle(
                         fontSize: 13,
                         color: themeColors.textSecondary,
@@ -268,7 +271,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                         letterSpacing: 1.5,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'e.g. ROOM-849201',
+                        hintText: l10n.joinRoomHint,
                         hintStyle: TextStyle(
                           color: themeColors.textMuted,
                           letterSpacing: 1.0,
@@ -319,7 +322,7 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                         final text = _inputController.text.trim();
                         if (text.isEmpty) {
                           setState(() {
-                            _inputError = 'Please enter a room code';
+                            _inputError = l10n.joinRoomErrorEmpty;
                           });
                           return;
                         }
@@ -329,9 +332,9 @@ class _MultiplayerSeedScreenState extends ConsumerState<MultiplayerSeedScreen> {
                         _playRoom(text);
                       },
                       icon: const Icon(Icons.sports_esports_rounded, size: 24),
-                      label: const Text(
-                        'JOIN MATCH',
-                        style: TextStyle(
+                      label: Text(
+                        l10n.joinMatch,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.2,

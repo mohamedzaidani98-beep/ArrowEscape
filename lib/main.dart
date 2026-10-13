@@ -7,6 +7,7 @@ import 'core/app_themes.dart';
 import 'core/audio_haptic_helper.dart';
 import 'data/repositories/progress_repository.dart';
 import 'data/repositories/level_repository.dart';
+import 'l10n/app_localizations.dart';
 import 'screens/home/home_screen.dart';
 
 void main() async {
@@ -52,8 +53,10 @@ class ArrowPuzzleApp extends ConsumerWidget {
     ));
 
     return MaterialApp(
-      title: 'Arrow Escape',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         useMaterial3: true,
         brightness: themeColors.isLight ? Brightness.light : Brightness.dark,

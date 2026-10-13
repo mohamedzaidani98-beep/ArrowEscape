@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_themes.dart';
+import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -19,6 +20,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -30,7 +32,7 @@ class SettingsScreen extends ConsumerWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'SETTINGS',
+          l10n.settingsTitle,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w900,
@@ -48,7 +50,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
               Text(
-                'THEME & CUSTOM SKIN',
+                l10n.themeSectionTitle,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -154,7 +156,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'PREFERENCES',
+                l10n.preferencesSectionTitle,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -164,8 +166,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               _buildPreferenceTile(
-                title: 'HAPTIC FEEDBACK',
-                description: 'Vibrate on arrow taps, moves, and collisions',
+                title: l10n.prefHapticsTitle,
+                description: l10n.prefHapticsDesc,
                 value: progress.hapticsEnabled,
                 onChanged: (_) =>
                     ref.read(progressRepositoryProvider).toggleHaptics(),
@@ -174,8 +176,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 14),
               _buildPreferenceTile(
-                title: 'INFINITE LIVES',
-                description: 'Play without losing hearts on blocked moves',
+                title: l10n.prefInfiniteLivesTitle,
+                description: l10n.prefInfiniteLivesDesc,
                 value: progress.heartRemover,
                 onChanged: (_) =>
                     ref.read(progressRepositoryProvider).toggleHeartRemover(),
@@ -184,8 +186,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 14),
               _buildPreferenceTile(
-                title: 'TAP ASSIST',
-                description: 'Count taps on empty tiles near arrows as clicks',
+                title: l10n.prefTapAssistTitle,
+                description: l10n.prefTapAssistDesc,
                 value: progress.assistMode,
                 onChanged: (_) =>
                     ref.read(progressRepositoryProvider).toggleAssistMode(),
@@ -282,6 +284,7 @@ class _UnlockDialogState extends State<_UnlockDialog> {
   Widget build(BuildContext context) {
     final progress = widget.ref.watch(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
+    final l10n = AppLocalizations.of(context)!;
 
     return Dialog(
       backgroundColor: themeColors.surface,
@@ -299,7 +302,7 @@ class _UnlockDialogState extends State<_UnlockDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Unlock Theme & Skins',
+                l10n.unlockThemeTitle,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -309,7 +312,7 @@ class _UnlockDialogState extends State<_UnlockDialog> {
               ),
               const SizedBox(height: 12),
               Text(
-                'Unlock all custom themes and premium styling options.',
+                l10n.unlockThemeDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: themeColors.textSecondary),
               ),
@@ -326,15 +329,15 @@ class _UnlockDialogState extends State<_UnlockDialog> {
                 onPressed: () async {
                   try {
                     await launchUrl(
-                      Uri.parse('https://buymeacoffee.com/sidhant947/e/562696'),
+                       Uri.parse('https://buymeacoffee.com/sidhant947/e/562696'),
                       mode: LaunchMode.externalApplication,
                     );
                   } catch (_) {}
                 },
                 icon: const Icon(Icons.local_cafe, size: 20),
-                label: const Text(
-                  'Get Unlock Code',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                label: Text(
+                  l10n.getUnlockCode,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
               const SizedBox(height: 20),
@@ -342,7 +345,7 @@ class _UnlockDialogState extends State<_UnlockDialog> {
                 controller: _controller,
                 style: TextStyle(color: themeColors.textPrimary),
                 decoration: InputDecoration(
-                  hintText: 'Enter unlock code',
+                  hintText: l10n.enterUnlockCodeHint,
                   hintStyle: TextStyle(color: themeColors.textMuted),
                   filled: true,
                   fillColor: themeColors.surfaceLight,
@@ -367,7 +370,7 @@ class _UnlockDialogState extends State<_UnlockDialog> {
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text(
-                      'Cancel',
+                      l10n.dialogCancel,
                       style: TextStyle(color: themeColors.textSecondary),
                     ),
                   ),
@@ -392,19 +395,19 @@ class _UnlockDialogState extends State<_UnlockDialog> {
                       if (success) {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('All themes and skins unlocked!'),
+                          SnackBar(
+                            content: Text(l10n.unlockSuccess),
                           ),
                         );
                       } else {
                         setState(() {
-                          _errorMessage = 'Invalid unlock code';
+                          _errorMessage = l10n.unlockErrorInvalid;
                         });
                       }
                     },
-                    child: const Text(
-                      'Unlock Now',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      l10n.unlockNow,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

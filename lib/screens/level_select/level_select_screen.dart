@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_themes.dart';
 import '../../core/audio_haptic_helper.dart';
+import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 import '../game/game_screen.dart';
 
@@ -20,6 +21,7 @@ class LevelSelectScreen extends ConsumerWidget {
     final progress = ref.watch(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
     final totalVisible = _calculateTotalVisible(progress.highestUnlockedLevel);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Container(
@@ -37,14 +39,14 @@ class LevelSelectScreen extends ConsumerWidget {
                       child: GestureDetector(
                         onTap: () => Navigator.pop(context),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                           padding: const EdgeInsets.all(8.0),
                           child: Icon(Icons.arrow_back_ios_new_rounded,
                               color: themeColors.textPrimary, size: 20),
                         ),
                       ),
                     ),
                     Center(
-                      child: Text('Levels',
+                      child: Text(l10n.levelsTitle,
                           style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w800,

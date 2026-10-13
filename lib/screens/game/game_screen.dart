@@ -17,6 +17,7 @@ import '../../data/repositories/progress_repository.dart';
 import '../../game/arrow_puzzle_game.dart';
 import '../../game/game_state.dart';
 import '../../widgets/lives_bar.dart';
+import '../../l10n/app_localizations.dart';
 import '../../main.dart';
 import '../home/home_screen.dart';
 
@@ -137,8 +138,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
     if (_gameState == null) return;
     final combo = _gameState!.comboCount;
     _comboTimer?.cancel();
+    final l10n = AppLocalizations.of(context);
     setState(() {
-      _comboText = '$combo x COMBO';
+      _comboText = l10n != null ? l10n.comboBanner(combo) : '$combo x COMBO';
     });
     _comboTimer = Timer(const Duration(milliseconds: 900), () {
       if (mounted) setState(() => _comboText = null);
@@ -146,8 +148,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
   }
 
   void _triggerTimeAttackBonusAnimation() {
+    final l10n = AppLocalizations.of(context);
     setState(() {
-      _bonusText = '+15s';
+      _bonusText = l10n != null ? l10n.bonusTimeBanner : '+15s';
       _showBonusAnimation = true;
     });
     Timer(const Duration(milliseconds: 900), () {
@@ -286,6 +289,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     if (_showingComplete || _showingGameOver) return true;
     final progress = ref.read(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
+    final l10n = AppLocalizations.of(context)!;
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => Dialog(
@@ -316,7 +320,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               ),
               const SizedBox(height: 12),
               Text(
-                'Leave Level?',
+                l10n.leaveLevelTitle,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
@@ -325,7 +329,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               ),
               const SizedBox(height: 8),
               Text(
-                'Your current level progress will be lost.',
+                l10n.leaveLevelDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -335,7 +339,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               ),
               const SizedBox(height: 20),
               _DialogButton(
-                label: 'Resume',
+                label: l10n.dialogResume,
                 icon: Icons.play_arrow_rounded,
                 textColor: themeColors.textPrimary,
                 iconColor: themeColors.accentColor,
@@ -343,7 +347,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               ),
               const SizedBox(height: 10),
               _DialogButton(
-                label: 'Leave',
+                label: l10n.dialogLeave,
                 icon: Icons.close_rounded,
                 textColor: themeColors.textSecondary,
                 iconColor: themeColors.accentColor,
@@ -873,15 +877,16 @@ class _TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     String titleText;
     if (gameMode == GameMode.timeAttack) {
-      titleText = 'Score: $score';
+      titleText = l10n.scoreTitle(score);
     } else if (gameMode == GameMode.zen) {
-      titleText = gameMode.label;
+      titleText = l10n.modeZenTitle;
     } else if (isRandom) {
-      titleText = 'Random Mode';
+      titleText = l10n.randomModeTitle;
     } else {
-      titleText = 'Level ${level.levelNumber}';
+      titleText = l10n.levelNumberTitle(level.levelNumber);
     }
 
     return Container(
@@ -1016,6 +1021,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
+    final l10n = AppLocalizations.of(context)!;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -1036,7 +1042,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Level Complete!',
+            Text(l10n.levelCompleteTitle,
                 style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w900,
@@ -1085,7 +1091,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
                         curve: Curves.easeInOut),
                     const SizedBox(height: 10),
                     Text(
-                      'You Finished the Game!',
+                      l10n.gameFinishedTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
@@ -1095,7 +1101,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Congratulations! You\'ve solved all 500 challenges. Stay tuned for more levels coming soon!',
+                      l10n.gameFinishedDesc,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 13,
@@ -1109,14 +1115,14 @@ class _LevelCompleteDialog extends ConsumerWidget {
               const SizedBox(height: 20),
             ] else if (!isRandom) ...[
               _DialogButton(
-                label: 'Next Level',
+                label: l10n.nextLevel,
                 icon: Icons.play_arrow_rounded,
                 onTap: onNextLevel,
               ),
               const SizedBox(height: 10),
             ],
             _DialogButton(
-              label: 'Home',
+              label: l10n.home,
               icon: Icons.home_rounded,
               textColor: themeColors.textPrimary,
               iconColor: themeColors.accentColor,
@@ -1124,7 +1130,7 @@ class _LevelCompleteDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             _DialogButton(
-              label: 'Buy me a coffee',
+              label: l10n.buyMeACoffee,
               icon: Icons.coffee_rounded,
               textColor: themeColors.textPrimary,
               iconColor: themeColors.accentColor,
@@ -1168,6 +1174,7 @@ class _GameOverDialog extends ConsumerWidget {
     final isTimeAttack = gameMode == GameMode.timeAttack;
     final progress = ref.watch(progressRepositoryProvider);
     final themeColors = AppThemes.getThemeColors(progress.selectedTheme);
+    final l10n = AppLocalizations.of(context)!;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -1199,8 +1206,8 @@ class _GameOverDialog extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(
               isTimeAttack
-                  ? "Time's Up!"
-                  : (isTimeout ? 'Out of Time!' : 'Out of Lives!'),
+                  ? l10n.timesUp
+                  : (isTimeout ? l10n.outOfTime : l10n.outOfLives),
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w900,
@@ -1210,7 +1217,7 @@ class _GameOverDialog extends ConsumerWidget {
             if (isTimeAttack) ...[
               const SizedBox(height: 8),
               Text(
-                'Puzzles Cleared: $score\nFinal Level: ${level.levelNumber}',
+                l10n.timeAttackStats(score, level.levelNumber),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -1221,7 +1228,7 @@ class _GameOverDialog extends ConsumerWidget {
             ],
             const SizedBox(height: 20),
             _DialogButton(
-              label: isTimeAttack ? 'Start New Run' : 'Restart Level',
+              label: isTimeAttack ? l10n.startNewRun : l10n.restartLevel,
               icon: Icons.refresh_rounded,
               textColor: themeColors.textPrimary,
               iconColor: themeColors.accentColor,
@@ -1229,7 +1236,7 @@ class _GameOverDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 10),
             _DialogButton(
-              label: 'Home',
+              label: l10n.home,
               icon: Icons.home_rounded,
               textColor: themeColors.textSecondary,
               iconColor: themeColors.accentColor,
@@ -1403,6 +1410,8 @@ class _LevelLoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: themeColors.bgGradient),
@@ -1413,7 +1422,7 @@ class _LevelLoadingScreen extends StatelessWidget {
               _LoaderAnimation(color: themeColors.accentColor),
               const SizedBox(height: 24),
               Text(
-                'LOADING LEVEL...',
+                l10n.loadingLevel,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
